@@ -47,9 +47,6 @@ class API(object):
         """
         if acronym.lower() in self._languages.keys():
             return self._languages[acronym.lower()]
-        for language in self._languages.itervalues():
-            if language.has_acronym(acronym):
-                return Language.copy(language)
         return None
     
     def get_language(self, language):
@@ -75,3 +72,7 @@ class API(object):
         self._languages = self._parse()
         if callback is not None:
             callback(self.languages)
+
+# For testing purposes         
+if __name__ == "__main__":
+    api = API()

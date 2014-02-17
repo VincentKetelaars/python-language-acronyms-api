@@ -18,13 +18,14 @@ class Parser(Thread):
     ISO 639-1 Alpha-2 code
     English language name(s)
     French language name(s)
+    Create languages dictionary where the key to the language is any of the acronyms
     '''
 
     def __init__(self, filename):
         Thread.__init__(self, name="Parser")
         self.filename = filename
         self.setDaemon(True)
-        self._languages = {} # { a3_biblio, Language }
+        self._languages = {} # { acronym, Language }
         self._event = Event()
         
     @property
@@ -34,9 +35,13 @@ class Parser(Thread):
     def run(self):
         try:
             for line in open(self.filename, "r"):
-                language = self._parse_line(line)
+                language = self._parse_line(line.strip())
                 if language is not None:
                     self._languages[language.alpha_3_bibliographic] = language
+                    if len(language.alpha_3_terminology):
+                        self._languages[language.alpha_3_terminology] = language
+                    if len(language.alpha_2):
+                        self._languages[language.alpha_2] = language
         except IOError:
             logger.exception("Could not read %s", self.filename)
         self._event.set()
