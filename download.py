@@ -6,7 +6,7 @@ Created on Feb 16, 2014
 from threading import Thread, Event
 from urllib2 import build_opener, HTTPErrorProcessor, HTTPHandler,\
     HTTPRedirectHandler
-from languages.logger import get_logger
+from logger import get_logger
 logger = get_logger(__name__)
 
 class Download(Thread):

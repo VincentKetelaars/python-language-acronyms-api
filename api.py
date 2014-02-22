@@ -3,11 +3,11 @@ Created on Feb 16, 2014
 
 @author: Vincent Ketelaars
 '''
-from languages.parse import Parser
-from languages.logger import get_logger
-from languages.download import Download
+from parse import Parser
+from logger import get_logger
+from download import Download
 from threading import Thread
-from languages.language import Language
+from language import Language
 logger = get_logger(__name__)
 
 ISO_URL = "http://loc.gov/standards/iso639-2/ISO-639-2_utf-8.txt"

@@ -4,8 +4,8 @@ Created on Feb 16, 2014
 @author: Vincent Ketelaars
 '''
 from threading import Thread, Event
-from languages.language import Language
-from languages.logger import get_logger
+from language import Language
+from logger import get_logger
 logger = get_logger(__name__)
 
 class Parser(Thread):
