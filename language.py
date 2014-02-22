@@ -76,3 +76,12 @@ class Language(object):
     
     def __str__(self):
         return "%s|%s|%s|%s|%s" % (self._a3_biblio, self._a3_term, self._a2, "; ".join(self._english), "; ".join(self._french))
+    
+    def __eq__(self, other):
+        return self._a3_biblio == other._a3_biblio
+    
+    def __neq__(self, other):
+        return not self.__eq__(other)
+    
+    def __hash__(self):
+        return hash(self._a3_biblio)
