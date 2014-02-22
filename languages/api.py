@@ -46,14 +46,17 @@ class API(object):
         @rtype: Language
         """
         if acronym.lower() in self._languages.keys():
-            return self._languages[acronym.lower()]
+            return Language.copy(self._languages[acronym.lower()])
         return None
     
     def get_language(self, language):
         """
-        Find Language by full language name
+        Find Language by full language name or acronym
         @rtype: Language
         """
+        lang = self.get_language_by_acronym(language)
+        if lang is not None:
+            return lang
         for lang in self._languages.itervalues():
             for l in lang.languages_en + lang.languages_fr:
                 if l.lower() == language.lower():
