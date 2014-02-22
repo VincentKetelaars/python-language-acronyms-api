@@ -3,6 +3,8 @@ Created on Feb 16, 2014
 
 @author: Vincent Ketelaars
 '''
+import os
+
 from parse import Parser
 from logger import get_logger
 from download import Download
@@ -26,6 +28,8 @@ class API(object):
         @param update: Use the most up to date version, which requires http retrieval
         @param callback: Callback function that will be called after update is done (Only when update is True)
         '''
+        self._iso_file = os.path.join(os.path.dirname(__file__), ISO_FILENAME)
+        self._iso_url = ISO_URL
         self._languages = {}
         if update:
             t = Thread(target=self._update, name="Updater", kwargs={"callback" : callback})
@@ -63,13 +67,13 @@ class API(object):
                     return Language.copy(lang)
                 
     def _parse(self):
-        parser = Parser(ISO_FILENAME)
+        parser = Parser(self._iso_file)
         parser.start()
         parser.wait(PARSER_WAIT)
         return parser.languages
         
     def _update(self, callback=None):
-        download = Download(ISO_URL, ISO_FILENAME)
+        download = Download(self._iso_url, self._iso_file)
         download.start()
         download.wait(DOWNLOAD_WAIT)
         self._languages = self._parse()
