@@ -61,8 +61,16 @@ class Language(object):
         else:
             return []
         
+    def acronyms(self):
+        a = [self._a3_biblio]
+        if len(self._a3_term):
+            a.append(self._a3_term)
+        if len(self._a2):
+            a.append(self._a2)
+        return a
+        
     def has_acronym(self, acronym):
-        if acronym.lower() in [self._a3_biblio, self._a3_term, self._a2]:
+        if acronym.lower() in self.acronyms():
             return True
         return False
     
