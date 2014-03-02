@@ -21,8 +21,13 @@ class Parser(Thread):
     Create languages dictionary where the key to the language is any of the acronyms
     '''
 
-    def __init__(self, filename):
+    def __init__(self, filename, encoding):
+        """
+        @param filename: File name
+        @param encoding: Encoding that should be used on the bytes read from file. No decoding if None
+        """
         Thread.__init__(self, name="Parser")
+        self.encoding = encoding
         self.filename = filename
         self.setDaemon(True)
         self._languages = {} # { acronym, Language }
@@ -35,6 +40,8 @@ class Parser(Thread):
     def run(self):
         try:
             for line in open(self.filename, "r"):
+                if self.encoding is not None:
+                    line = line.decode(self.encoding, "ignore")
                 language = self._parse_line(line.strip())
                 if language is not None:
                     self._languages[language.alpha_3_bibliographic] = language
@@ -53,7 +60,7 @@ class Parser(Thread):
             return None
         english = elements[3].split("; ")
         french = elements[4].split("; ")
-        return Language(elements[0], elements[1], elements[2], english, french)
+        return Language(elements[0], elements[1], elements[2], english, french, self.encoding)
     
     def ready(self):
         return not self._event.is_set()

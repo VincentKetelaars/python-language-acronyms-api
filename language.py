@@ -14,24 +14,26 @@ class Language(object):
     French language name(s)
     '''
 
-    def __init__(self, a3_biblio, a3_term, a2, english, french):
+    def __init__(self, a3_biblio, a3_term, a2, english, french, encoding):
         """
-        @type a3_biblio: str
-        @type a3_term: str
-        @type a2: str
-        @type english: List(str)
-        @type french: List(str)
+        @type a3_biblio: unicode
+        @type a3_term: unicode
+        @type a2: unicode
+        @type english: List(unicode)
+        @type french: List(unicode)
+        @param encoding: Encoding of the parameters
         """
         self._a3_biblio = a3_biblio
         self._a3_term = a3_term
         self._a2 = a2
         self._english = english
         self._french = french
+        self._encoding = encoding
         
     @classmethod
     def copy(cls, language):
         assert isinstance(language, Language)
-        return cls(language._a3_biblio, language._a3_term, language._a2, language._english[:], language._french[:])
+        return cls(language._a3_biblio, language._a3_term, language._a2, language._english[:], language._french[:], language._encoding)
         
     @property
     def alpha_3_bibliographic(self):
@@ -75,7 +77,13 @@ class Language(object):
         return False
     
     def __str__(self):
-        return "%s|%s|%s|%s|%s" % (self._a3_biblio, self._a3_term, self._a2, "; ".join(self._english), "; ".join(self._french))
+        def enc(s):
+            if self._encoding is not None:
+                return s.encode(self._encoding)
+            return s
+        
+        return "%s|%s|%s|%s|%s" % (enc(self._a3_biblio), enc(self._a3_term), enc(self._a2), 
+                                   enc(enc("; ").join(self._english)), enc(enc("; ").join(self._french)))
     
     def __eq__(self, other):
         return self._a3_biblio == other._a3_biblio

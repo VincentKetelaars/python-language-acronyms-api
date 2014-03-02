@@ -22,15 +22,18 @@ class API(object):
     API to the languages and acronyms presiding in the CSV file
     '''
 
-    def __init__(self, update=False, callback=None):
+    def __init__(self, update=False, callback=None, encoding=None):
         '''
         By default, this API is initialized by reading the CSV languages file
         @param update: Use the most up to date version, which requires http retrieval
         @param callback: Callback function that will be called after update is done (Only when update is True)
+        @param encoding: If not None, used as encoding for the language parameters
         '''
+        self._encoding = encoding
         self._iso_file = os.path.join(os.path.dirname(__file__), ISO_FILENAME)
         self._iso_url = ISO_URL
         self._languages = {}
+
         if update:
             t = Thread(target=self._update, name="Updater", kwargs={"callback" : callback})
             t.start()
@@ -67,7 +70,7 @@ class API(object):
                     return Language.copy(lang)
                 
     def _parse(self):
-        parser = Parser(self._iso_file)
+        parser = Parser(self._iso_file, self._encoding)
         parser.start()
         parser.wait(PARSER_WAIT)
         return parser.languages
@@ -82,4 +85,4 @@ class API(object):
 
 # For testing purposes         
 if __name__ == "__main__":
-    api = API()
+    api = API(encoding="utf-8")
